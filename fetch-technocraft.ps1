@@ -1,29 +1,28 @@
 cls
 
 
-#$root_url = 'http://www.technocraft.org/sirait/tarombo.cgi?lyr=5;wfe=Y;dgh=L;man=100273'
+$root_url = 'http://www.technocraft.org/sirait/tarombo.cgi?lyr=5;wfe=Y;dgh=L;man=100273'
 #$root_url = 'http://www.technocraft.org/sirait/tarombo.cgi?lyr=5;wfe=Y;dgh=L;man=100403'
-$root_url = 'http://www.technocraft.org/sirait/tarombo.cgi?lyr=5;wfe=Y;dgh=L;man=100390'
+#$root_url = 'http://www.technocraft.org/sirait/tarombo.cgi?lyr=5;wfe=Y;dgh=L;man=100390'
 
 #$root_url = 'http://www.technocraft.org/sirait/tarombo.cgi?lyr=5;wfe=Y;dgh=L;man=100273;act=tree'
 #$family = 'http://www.technocraft.org/sirait/tarombo.cgi?lyr=5;wfe=Y;dgh=L;man=100273;act=pick_man'
-<#
-$r = Invoke-WebRequest -Uri $root_url
-$s = $r.Content
 
-$m = [regex]::Matches($s, '\<tr\>\<td width\=\"7\%\"\>\&nbsp\;\<\/td\>\<td colspan\=5\>\<a href\=\"(.*?)\"\>(.*?)\<\/a\>')
-#$m[0].Groups[1].Value
-#$m[0].Groups[2].Value
 
-foreach ($i in $m) {
-    $link = $i.Groups[1].Value.TrimEnd(';act=pick_man')
-    $name = $i.Groups[2].Value
-    #$link
-    #$name
+# fetch links
+$r1 = Invoke-WebRequest -Uri ($root_url + ';act=tree')
+
+$m1 = [regex]::Matches($r1.Content, '(?ims)\<tr\>\<td width\=\"7\%\"\>\&nbsp\;\<\/td\>\<td colspan\=5>\<a href\=\"(.+?)\"\>(.+?)\<\/a\>')
+for ($i=0; $i -lt $m1.Count; $i++) {
+    $son_link = $m1[$i].Groups[1].Value.TrimEnd(';act=pick_man')
+    $son_name = $m1[$i].Groups[2].Value
+    $son_number = $i + 1
+    # write db
 }
-#>
 
-# fetch family
+
+<#
+# fetch family details
 $r2 = Invoke-WebRequest -Uri ($root_url + ';act=pick_man')
 
 $m2 = [regex]::Matches($r2.Content, '(?ims)(.*?)Istri\:(.*?)Anak\:(.*?)Boru\:(.*)')
@@ -59,3 +58,19 @@ foreach ($i in $daughter) {
     $daughter_number, $daughter_name, $daughter_location
 }
 
+#>
+
+
+
+
+
+'http://www.technocraft.org/sirait/tarombo.cgi?lyr=5;wfe=Y;dgh=L;man=100273'
+'Raja Toga Sirait alias Sirait'
+
+<#
+foreach ($i in 1..100) {
+	data_miner(gen)
+	conn.commit()
+    #if () { break; }
+}
+#>
